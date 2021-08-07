@@ -14,6 +14,12 @@ public class Post {
 
     private String title, anons, fullText;
     private int views;
+    public Post(){}
+    public Post(String title_, String anons_, String full_text){
+        title = title_;
+        anons = anons_;
+        fullText = full_text;
+    }
 
     public long getId(){
         return id;

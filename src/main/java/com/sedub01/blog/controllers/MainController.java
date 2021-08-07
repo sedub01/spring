@@ -12,7 +12,8 @@ public class MainController {
     //при переходе на главную страницу вызывается данный url
 	public String home(Model model) {
 		model.addAttribute("title", "Главная страница");
-		return "home";
+		return "home"; //если мы перешли по вот такому url-адресу,
+		//то вызывается шаблон "home"
 	}
 
 }
