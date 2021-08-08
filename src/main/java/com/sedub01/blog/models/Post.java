@@ -12,13 +12,13 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String title, anons, fullText;
+    private String title, anons, full_text;
     private int views;
     public Post(){}
-    public Post(String title_, String anons_, String full_text){
+    public Post(String title_, String anons_, String full_text_){
         title = title_;
         anons = anons_;
-        fullText = full_text;
+        full_text = full_text_;
     }
 
     public long getId(){
@@ -43,10 +43,10 @@ public class Post {
     }
 
     public String getFulltext(){
-        return fullText;
+        return full_text;
     }
     public void setFulltext(String text){
-        fullText = text;
+        full_text = text;
     }
 
     public int getViews(){
