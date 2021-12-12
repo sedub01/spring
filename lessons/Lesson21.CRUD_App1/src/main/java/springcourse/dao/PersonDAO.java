@@ -25,6 +25,6 @@ public class PersonDAO {
     }
 
     public Person show(int id){
-        return people.get(id);
+        return people.get(id - 1);
     }
 }
