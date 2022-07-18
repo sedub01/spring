@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+    <div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </div>
+    <div>
+        <form method="post">
+            <input type="text" name="text" placeholder="Введите сообщение" />
+            <input type="text" name="tag" placeholder="Тег">
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+    <div>Список сообщений</div>
+    <form method="post" action="filter">
+        <input type="text" name="filter">
+        <button type="submit">Найти</button>
+    </form>
+    <ul>
+        <!-- messages исходит из MainController, где PostMapping'ом создается объект Iterable<Message> messages -->
+        <li th:each="message : ${messages}">
+            <b th:text="${message.id}"></b>
+            <span th:text="${message.text}"></span>
+            <i th:text="${message.tag}"></i>
+            <strong th:text="${message.authorName}"></strong>
+        </li>
+    </ul>
+
+</body>
+</html>
