@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div>
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Sign Out"/>
+            <span><a href="/user">Список пользователей</a></span>
         </form>
     </div>
     <div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <input type="text" name="text" placeholder="Введите сообщение" />
             <input type="text" name="tag" placeholder="Тег">
+            <input type="file" name="file">
             <button type="submit">Добавить</button>
         </form>
     </div>
     <div>Список сообщений</div>
-    <form method="post" action="filter">
-        <input type="text" name="filter">
+    <form method="get" action="/index">
+        <input type="text" name="filter" th:value="${filter}">
         <button type="submit">Найти</button>
     </form>
     <ul>
@@ -29,6 +32,9 @@
             <span th:text="${message.text}"></span>
             <i th:text="${message.tag}"></i>
             <strong th:text="${message.authorName}"></strong>
+            <div>
+                <img th:src="${message.filename != null}? @{${'/img/' + message.filename}}" />
+            </div>
         </li>
     </ul>
 

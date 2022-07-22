@@ -12,7 +12,10 @@ public class Message {
     private String tag;
     @ManyToOne(fetch = FetchType.EAGER) //одному пользователю соотвествует множество сообщений
     @JoinColumn(name = "user_id") //это нужно для того, чтобы в колонке БД было "user_id", а не "author_id"
+    // То бишь в таблицу добавляется колонка "user_id" в самом конце
     private User author; //со стороны пользователя это уже OneToMany
+
+    private String filename; //картинка хранится на жестком диске
 
     public Message() {}
 
@@ -56,5 +59,13 @@ public class Message {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

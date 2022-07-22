@@ -11,11 +11,15 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 public class User implements UserDetails {
+    // реализация UserDetails нужна для последующей реализации UserDetailsService, где
+    // интерфейс будет реализовывать объект класса User (как будто это его родная сущность)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
     private String password;
+    // Если название в таблице то же, что и в описании класса, то название колонки можно не помечать
+    // В таблице оно "is_active" из-за camelCase'а
     private boolean isActive;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
