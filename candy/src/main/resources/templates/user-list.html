@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:insert="blocks/common :: common">
     <title>Список пользователей</title>
 </head>
 <body>
-<table>
-    <thead>
-        <tr>
-            <th>Имя</th>
-            <th>Роль</th>
-            <th>Команды?</th>
+<div th:insert="blocks/navbar :: navbar"></div>
+<div  class="container">
+    <div th:insert="blocks/jsconnect :: jsconnect"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Роль</th>
+                <th>Команды?</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${users}">
+            <td th:text="${user.username}">Имя</td>
+            <td th:text="${user.getRoles()}">Список ролей через запятую</td>
+            <td><a th:href="@{'/user/' + ${user.getId()}}">Редактировать</a></td>
         </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user: ${users}">
-        <td th:text="${user.username}">Имя</td>
-        <td th:text="${user.getRoles()}">Список ролей через запятую</td>
-        <td><a th:href="@{'/user/' + ${user.getId()}}">Редактировать</a></td>
-    </tr>
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

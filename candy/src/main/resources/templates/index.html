@@ -1,42 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
+<head th:insert="blocks/common :: common">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-            <span><a href="/user">Список пользователей</a></span>
-        </form>
-    </div>
-    <div>
-        <form method="post" enctype="multipart/form-data">
-            <input type="text" name="text" placeholder="Введите сообщение" />
-            <input type="text" name="tag" placeholder="Тег">
-            <input type="file" name="file">
-            <button type="submit">Добавить</button>
-        </form>
-    </div>
-    <div>Список сообщений</div>
-    <form method="get" action="/index">
-        <input type="text" name="filter" th:value="${filter}">
-        <button type="submit">Найти</button>
-    </form>
-    <ul>
-        <!-- messages исходит из MainController, где PostMapping'ом создается объект Iterable<Message> messages -->
-        <li th:each="message : ${messages}">
-            <b th:text="${message.id}"></b>
-            <span th:text="${message.text}"></span>
-            <i th:text="${message.tag}"></i>
-            <strong th:text="${message.authorName}"></strong>
-            <div>
-                <img th:src="${message.filename != null}? @{${'/img/' + message.filename}}" />
-            </div>
-        </li>
-    </ul>
+<div th:insert="blocks/navbar :: navbar"></div>
+<div  class="container">
+    <div th:insert="blocks/jsconnect :: jsconnect"></div>
 
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <form method="get" action="/index" class="form-inline">
+                <input type="text" name="filter" class="form-control" th:value="${filter}" placeholder="Поиск по тегу">
+                <button type="submit" class="btn btn-primary ml-2">Найти</button>
+            </form>
+        </div>
+    </div>
+
+    <a class="btn btn-primary mb-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Добавить сообщение
+    </a>
+    <div class="collapse" id="collapseExample">
+        <div class="form-group mt-3">
+            <!-- enctype определяет способ кодирования данных формы при отправке на сервер
+            multipart/form-data - Данные не кодируются. Это значение применяется при отправке файлов.-->
+            <form method="post" enctype="multipart/form-data">
+                <input type="text" class="form-control mb-2" name="text" placeholder="Введите сообщение" />
+                <input type="text" class="form-control mb-2" name="tag" placeholder="Тег">
+                <div class="custom-file mb-2">
+                    <input type="file" name="file" id="customFile">
+                    <label class="custom-file-label" for="customFile">Выбрать файл</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </form>
+        </div>
+    </div>
+    <div class="card-columns"> <!-- Этот класс нужно объявлять перед итерацией сообщений -->
+        <div class="card mb-1" th:each="message : ${messages}">
+            <!-- messages исходит из MainController, где PostMapping'ом создается объект Iterable<Message> messages -->
+            <img th:src="${message.filename != null}? @{${'/img/' + message.filename}}" class="card-img-top"/>
+            <div class="m-2">
+                <span th:text="${message.text}"></span>
+                <i th:text="${message.tag}"></i>
+            </div>
+            <div class="card-footer text-muted">
+                <strong th:text="${message.authorName}"></strong>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

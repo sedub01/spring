@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:insert="blocks/common :: common">
     <title>Редактирование пользователей</title>
 </head>
 <body>
-<form action="/user" method="post">
-    <input type="text" th:value="${user.username}" name="username">
-    <!-- Итерация по списку ролей -->
-    <div th:each="role : ${roles}">
-        <input type="checkbox" th:id="${role}" th:name="${role}" th:checked="${#lists.contains(user.roles, role)}">
-        <label th:for="${role}" th:text="${role}">Роль</label>
-    </div>
-    <input type="hidden" th:value="${user.id}" name="user-id">
-    <button type="submit">Сохранить</button>
-</form>
+<div th:insert="blocks/navbar :: navbar"></div>
+<div  class="container">
+    <div th:insert="blocks/jsconnect :: jsconnect"></div>
+    <form action="/user" method="post">
+        <input type="text" th:value="${user.username}" name="username">
+        <!-- Итерация по списку ролей -->
+        <div th:each="role : ${roles}">
+            <input type="checkbox" th:id="${role}" th:name="${role}" th:checked="${#lists.contains(user.roles, role)}">
+            <label th:for="${role}" th:text="${role}">Роль</label>
+        </div>
+        <input type="hidden" th:value="${user.id}" name="user-id">
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
 </body>
 </html>

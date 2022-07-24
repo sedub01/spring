@@ -33,9 +33,8 @@ public class MainController {
 
     @GetMapping("/index")
     public String mainPage(@RequestParam(required = false, defaultValue = "") String filter, Model model){
-        Iterable<Message> messages = messageRepo.findAll();
-        if (filter != null)
-            messages = messageRepo.findByTag(filter);
+        Iterable<Message> messages = (!filter.isEmpty())?
+                messageRepo.findByTag(filter) : messageRepo.findAll();
         model.addAttribute("messages", messages);
         model.addAttribute("filter", filter);
         return "index";
@@ -61,7 +60,7 @@ public class MainController {
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists())
                 uploadDir.mkdir();
-            String uuidFile = UUID.randomUUID().toString();
+            String uuidFile = UUID.randomUUID().toString(); // это нужно для предотвращения коллизий
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
             file.transferTo(new File(uploadPath + "/" + resultFilename));
             message.setFilename(resultFilename);

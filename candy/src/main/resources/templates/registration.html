@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
+<head th:insert="blocks/common :: common">
     <title>Регистрация</title>
 </head>
 <body>
-Добавление нового пользователя
-<p th:text="${message != null}? ${message}">Message</p>
-<form th:action="@{/registration}" method="post">
-    <div><label> Логин : <input type="text" name="username"/> </label></div>
-    <div><label> Пароль: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Зарегистрироваться"/></div>
-</form>
+<div th:insert="blocks/navbar :: navbar"></div>
+<div  class="container">
+    <div th:insert="blocks/jsconnect :: jsconnect"></div>
+    Добавление нового пользователя
+    <p th:text="${message != null}? ${message}">Message</p>
+    <form th:action="@{/registration}" method="post">
+        <div th:insert="blocks/inputs :: inputs"></div>
+        <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+    </form>
+</div>
 </body>
 </html>
