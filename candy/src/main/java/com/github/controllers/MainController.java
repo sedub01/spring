@@ -40,8 +40,8 @@ public class MainController {
         return "index";
     }
 
-    @PostMapping("index")
-    public String add(
+    @PostMapping("/index")
+    public String addMessage(
             @AuthenticationPrincipal User user,
             @RequestParam String text,
             @RequestParam String tag,

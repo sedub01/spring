@@ -21,7 +21,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/", "/registration", "/static/**").permitAll() //эти ресурсы доступны без авторизации
+                    .antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
+                    //эти ресурсы доступны без авторизации (одна звезда - только следующая папка, две - все остальные папки)
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

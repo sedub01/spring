@@ -21,6 +21,8 @@ public class User implements UserDetails {
     // Если название в таблице то же, что и в описании класса, то название колонки можно не помечать
     // В таблице оно "is_active" из-за camelCase'а
     private boolean isActive;
+    private String email;
+    private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     //fetch - параметр, определяющий, как данные будут подгружаться относительно сущности
@@ -72,6 +74,22 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 
     @Override

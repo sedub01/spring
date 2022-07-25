@@ -12,6 +12,14 @@
     <p th:text="${message != null}? ${message}">Message</p>
     <form th:action="@{/registration}" method="post">
         <div th:insert="blocks/inputs :: inputs"></div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Email :  </label>
+            <div class="col-sm-6">
+                <input type="email" class="form-control" name="email" placeholder="Введите свою почту"/>
+            </div>
+        </div>
+
         <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
     </form>
 </div>

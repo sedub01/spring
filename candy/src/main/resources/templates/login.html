@@ -8,6 +8,10 @@
 <div th:insert="blocks/navbar :: navbar"></div>
 <div  class="container">
     <div th:insert="blocks/jsconnect :: jsconnect"></div>
+    <p th:text="${message != null}? ${message}">Message</p>
+    <!--
+    <p th:if="${user.isActive() == false}">Можете закрывать страницу</p>
+    -->
     <form th:action="@{/login}" method="post">
         <div th:insert="blocks/inputs :: inputs"></div>
         <button class="btn btn-primary" type="submit">Войти</button>
