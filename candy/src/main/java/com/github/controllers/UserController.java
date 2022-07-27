@@ -2,33 +2,31 @@ package com.github.controllers;
 
 import com.github.models.Role;
 import com.github.models.User;
-import com.github.repos.UserRepo;
+import com.github.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
 //Mapping помечается на уровне класса, чтобы у каждого метода не подписывать в начале пути "/user"
-@PreAuthorize("hasAuthority('ADMIN')") // только админ имеет доступ к методам этого контроллера
 public class UserController {
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public String userList(Model model){
-        model.addAttribute("users", userRepo.findAll());
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')") // только админ имеет доступ к методам этого контроллера
     @GetMapping("{user}")
     public String userEditForm(@PathVariable User user, Model model){
         model.addAttribute("user", user);
@@ -36,27 +34,32 @@ public class UserController {
         return "user-edit";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public String saveUser(
             @RequestParam String username,
             @RequestParam Map<String, String> form,
             @RequestParam("user-id") User user){
-        user.setUsername(username);
-        //список ролей у конкретного пользователя
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
-        // берем все существующие в приложении роли,
-        // преобразуем массив этих ролей в стрим, где
-        // получаем имена ролей и полученый список имён складываем в set
-        user.getRoles().clear();
-        for (String key : form.keySet()) {
-            if (roles.contains(key)){
-                user.getRoles().add(Role.valueOf(key));
-            }
-        }
-        userRepo.save(user);
+        // в контроллере не должно быть никакой логики - для этого существуют сервисные классы
+        userService.saveUser(user, username, form);
         return "redirect:/user";
+    }
+
+    @GetMapping("/profile")
+    // короче, без этой аннотации всё пойдет по одному месту (см. комментарий в MainController)
+    public String getProfile(Model model, @AuthenticationPrincipal User user){
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateProfile(
+            @AuthenticationPrincipal User user,
+            @RequestParam String password,
+            @RequestParam String email){
+        userService.updateProfile(user, password, email);
+        return "redirect:/user/profile";
     }
 
 }

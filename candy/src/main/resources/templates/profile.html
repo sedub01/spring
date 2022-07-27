@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head th:insert="blocks/common :: common">
+    <meta charset="UTF-8">
+    <title>Редактирование профиля</title>
+</head>
+<body>
+<div th:insert="blocks/navbar :: navbar"></div>
+<div class="container">
+    <div th:insert="blocks/jsconnect :: jsconnect"></div>
+    <h5 th:text="${username}"></h5>
+    <!-- Мы не переиспользуем форму логина, потому что специфика профиля сильно отличается от логина,
+     и дальше разработка может уйти в другом направлении -->
+    <form method="post">
+        <!-- Сказано, что имя пользователя не будет меняться никогда, но в будущем я хочу исправить это недоразумение
+        (наверно, потому что в таком случае придется менять ники и в сообщениях)
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Логин :  </label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="username" placeholder="Введите логин"/>
+            </div>
+        </div>
+        -->
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Пароль :  </label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" name="password" placeholder="Введите пароль"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Email :  </label>
+            <div class="col-sm-6">
+                <input type="email" class="form-control" name="email" placeholder="Введите свою почту"
+                       th:placeholder="${email != null}? ${email} : ''"/>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+    </form>
+</div>
+</body>
+</html>

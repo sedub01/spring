@@ -14,6 +14,10 @@
                 <!-- С методом hasAuthority() мы уже встречались в аннотации @PreAuthorize -->
                 <a class="nav-link" href="/user">Список пользователей</a>
             </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <!-- С методом hasAuthority() мы уже встречались в аннотации @PreAuthorize -->
+                <a class="nav-link" href="/user/profile">Профиль</a>
+            </li>
         </ul>
         <div class="navbar-text mr-3" sec:authorize="!isAuthenticated()">unknown</div>
         <div class="navbar-text mr-3" sec:authorize="isAuthenticated()" sec:authentication="name"></div>
