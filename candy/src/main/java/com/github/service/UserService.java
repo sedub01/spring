@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,11 +21,14 @@ public class UserService implements UserDetailsService {
     private UserRepo userRepo;
     @Autowired
     private SmtpMailSender smtpMailSender;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     // В этом методе мы определяем правила загрузки пользователя по его имени
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username);
+        return user;
     }
 
     public boolean addUser(User user){
@@ -37,6 +41,7 @@ public class UserService implements UserDetailsService {
         //user.setActive(true); //нужно сделать так, чтобы пользователь активировался после активации, а не сразу
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user); //надо ли удалять или подождать до активации?
         sendActivationMessage(user);
         return true;
@@ -92,17 +97,17 @@ public class UserService implements UserDetailsService {
         String userEmail = user.getEmail();
         boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
                 (userEmail != null && !userEmail.equals(email));
-        if (isEmailChanged){
+        //if (isEmailChanged){
             user.setEmail(email);
             if (!StringUtils.isEmpty(email)){
                 user.setActivationCode(UUID.randomUUID().toString());
             }
-        }
+        //}
         if (!StringUtils.isEmpty(password)){
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
-
-        if (isEmailChanged) sendActivationMessage(user);
+        //if (isEmailChanged)
+            sendActivationMessage(user);
         userRepo.save(user); // в уроке эти две строки поменяны местами
     }
 }

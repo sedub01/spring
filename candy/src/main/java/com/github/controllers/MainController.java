@@ -3,19 +3,26 @@ package com.github.controllers;
 import com.github.models.Message;
 import com.github.models.User;
 import com.github.repos.MessageRepo;
+import com.github.service.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -43,17 +50,29 @@ public class MainController {
     public String addMessage(
             //эта аннотация нужна для внедрения текущего (зарегистрированного) пользователя!
             @AuthenticationPrincipal User user,
-            @RequestParam String text,
-            @RequestParam String tag,
+            @Valid Message message, //аннотация запускает валидацию поля
+            BindingResult bindingResult, //здесь отображаются ошибки валидации
             Model model,
             @RequestParam("file") MultipartFile file) throws IOException {
-        Message message = new Message(text, tag, user);
-        uploadFile(message, file);
-        messageRepo.save(message);
+        message.setAuthor(user);
+        if (bindingResult.hasErrors()){
+            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
+            model.mergeAttributes(errorsMap);
+            model.addAttribute("message", message);
+        }
+        else{
+            uploadFile(message, file);
+            messageRepo.save(message);
+        }
+        model.addAttribute("message", null); //после этого из модели нужно наш message, иначе после добавления
+                                    // мы опять получим открытую форму с сообщением, которое пытались добавить
+
         Iterable<Message> messages = messageRepo.findAll();
         model.addAttribute("messages", messages); //вот здесь именно строка messages передается в index.html
         return "index";
     }
+
+
 
     private void uploadFile(Message message, MultipartFile file) throws IOException {
         if(file != null && !file.getOriginalFilename().isEmpty()){

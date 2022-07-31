@@ -9,14 +9,31 @@
 <div  class="container">
     <div th:insert="blocks/jsconnect :: jsconnect"></div>
     Добавление нового пользователя
-    <p th:text="${message != null}? ${message}">Message</p>
+    <div th:each="message: ${messages}">
+        <p th:text="${message}"></p>
+    </div>
     <form th:action="@{/registration}" method="post">
         <div th:insert="blocks/inputs :: inputs"></div>
 
         <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Пароль :  </label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control mb-2"
+                       th:classappend="${validationPasswordError != null}? is-invalid"
+                       name="validationPassword" placeholder="Повторите пароль"/>
+                <div class="invalid-feedback"
+                     th:text="${validationPasswordError != null}? ${validationPasswordError}"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <label class="col-sm-2 col-form-label"> Email :  </label>
             <div class="col-sm-6">
-                <input type="email" class="form-control" name="email" placeholder="Введите свою почту"/>
+                <input type="email" class="form-control mb-2"
+                       th:classappend="${emailError != null}? is-invalid"
+                       name="email" th:value="${user != null}? ${user.email}"
+                       placeholder="Введите свою почту"/>
+                <div class="invalid-feedback" th:text="${emailError != null}? ${emailError}"></div>
             </div>
         </div>
 

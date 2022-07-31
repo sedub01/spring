@@ -17,16 +17,23 @@
         </div>
     </div>
 
-    <a class="btn btn-primary mb-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    <a class="btn btn-primary mb-2" data-toggle="collapse" href="#collapseExample"
+       role="button" aria-expanded="false" aria-controls="collapseExample">
         Добавить сообщение
     </a>
-    <div class="collapse" id="collapseExample">
+    <div class="collapse" th:classappend="${message != null}? show" id="collapseExample">
         <div class="form-group mt-3">
             <!-- enctype определяет способ кодирования данных формы при отправке на сервер
             multipart/form-data - Данные не кодируются. Это значение применяется при отправке файлов.-->
             <form method="post" enctype="multipart/form-data">
-                <input type="text" class="form-control mb-2" name="text" placeholder="Введите сообщение" />
-                <input type="text" class="form-control mb-2" name="tag" placeholder="Тег">
+                <input type="text" class="form-control mb-2" th:classappend="${textError != null}? is-invalid"
+                       th:value="${message != null}? ${message.text}" name="text" placeholder="Введите сообщение" />
+                <div class="invalid-feedback" th:text="${textError != null}? ${textError}"></div>
+
+                <input type="text" class="form-control mb-2" th:classappend="${tagError != null}? is-invalid"
+                       th:value="${message != null}? ${message.tag}" name="tag" placeholder="Тег">
+                <div class="invalid-feedback" th:text="${tagError != null}? ${tagError}"></div>
+
                 <div class="custom-file mb-2">
                     <input type="file" name="file" id="customFile">
                     <label class="custom-file-label" for="customFile">Выбрать файл</label>

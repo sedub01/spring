@@ -1,6 +1,9 @@
 package com.github.models;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
@@ -8,7 +11,11 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Пожалуйста, заполни поле")
+    @Length(max = 512, message = "Слишком большое сообщение (более 0.5 Мб)")
     private String text;
+    @NotBlank(message = "Пожалуйста, введи тег")
+    @Length(max = 255, message = "Слишком большой тег (более 0.25 Мб)")
     private String tag;
     @ManyToOne(fetch = FetchType.EAGER) //одному пользователю соотвествует множество сообщений
     @JoinColumn(name = "user_id") //это нужно для того, чтобы в колонке БД было "user_id", а не "author_id"

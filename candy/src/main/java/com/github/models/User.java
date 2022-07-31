@@ -5,6 +5,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.annotation.processing.Generated;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
@@ -16,11 +18,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotBlank(message = "Ник не может быть пустым")
     private String username;
+    @NotBlank(message = "Пароль не может быть пустым")
     private String password;
+    @Transient // без этой аннотации hibernate попытается запихать это поле в БД или получить его
+               // (перевод. как "временный")
+    private String validationPassword;
     // Если название в таблице то же, что и в описании класса, то название колонки можно не помечать
     // В таблице оно "is_active" из-за camelCase'а
     private boolean isActive;
+
+    @Email(message = "Некорректный формат почты")
+    @NotBlank(message = "Адрес почты не может быть пустым")
     private String email;
     private String activationCode;
 
@@ -90,6 +100,14 @@ public class User implements UserDetails {
 
     public void setActivationCode(String activationCode) {
         this.activationCode = activationCode;
+    }
+
+    public String getValidationPassword() {
+        return validationPassword;
+    }
+
+    public void setValidationPassword(String validationPassword) {
+        this.validationPassword = validationPassword;
     }
 
     @Override

@@ -2,14 +2,22 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label"> Логин :  </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="username" placeholder="Введите логин"/>
+            <input type="text" class="form-control mb-2"
+                   th:classappend="${usernameError != null}? is-invalid"
+                   name="username" th:value="${user != null}? ${user.username}"
+                   placeholder="Введите логин"/>
+            <div class="invalid-feedback" th:text="${usernameError != null}? ${usernameError}"></div>
         </div>
     </div>
 
     <div class="form-group row">
         <label class="col-sm-2 col-form-label"> Пароль :  </label>
         <div class="col-sm-6">
-            <input type="password" class="form-control" name="password" placeholder="Введите пароль"/>
+            <input type="password" class="form-control mb-2" th:classappend="${passwordError != null}? is-invalid"
+                   name="password" placeholder="Введите пароль"/>
+            <div class="invalid-feedback" th:text="${passwordError != null}? ${passwordError}"></div>
         </div>
     </div>
+
+
 </div>

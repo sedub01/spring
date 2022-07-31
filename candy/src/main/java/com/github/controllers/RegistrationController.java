@@ -1,13 +1,19 @@
 package com.github.controllers;
 
 import com.github.models.User;
+import com.github.service.ControllerUtils;
 import com.github.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Map;
 
 @Controller
 public class RegistrationController {
@@ -20,9 +26,19 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Model model){
+    public String addUser(@Valid User user, BindingResult bindingResult, /*для получения ошибок валидации*/
+                          Model model){
+        if (user.getPassword() != null && !user.getPassword().equals(user.getValidationPassword())){
+            model.addAttribute("passwordError", "Пароли различаются!");
+            return "registration";
+        }
+        if (bindingResult.hasErrors()){
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+            model.mergeAttributes(errors);
+            return "registration";
+        }
         if (!userService.addUser(user)){ // если не смогли добавить такого пользователя
-            model.addAttribute("message", "Пользователь с таким именем существует");
+            model.addAttribute("usernameError", Arrays.asList("Пользователь с таким именем существует"));
             return "registration";
         }
 //        if (!user.isActive()){ //если пользователь пока что не активирован (этот блок выполняется всегда)
